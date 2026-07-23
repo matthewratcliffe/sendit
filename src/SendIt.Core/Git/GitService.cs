@@ -91,6 +91,8 @@ public class GitService
 
     public GitResult StageAll() => Run("add -A");
 
+    public bool HasStagedChanges() => !Run("diff --cached --quiet").Success;
+
     public GitResult Commit(string message)
     {
         var tempFile = Path.GetTempFileName();

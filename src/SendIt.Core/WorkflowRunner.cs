@@ -50,6 +50,22 @@ public class WorkflowRunner
             return ExitCode.ValidationFailed;
         }
 
+        if (_config.General.AutoStageFiles)
+        {
+            var stageResult = _git.StageAll();
+            if (!stageResult.Success)
+            {
+                _ui.Error($"git add failed: {stageResult.StdErr}");
+                return ExitCode.GitFailure;
+            }
+        }
+
+        if (!_git.HasStagedChanges())
+        {
+            _ui.Error("Nothing to commit.");
+            return ExitCode.NothingToCommit;
+        }
+
         var branch = _git.GetCurrentBranch();
         var branchValidator = new BranchValidator(_config.Git.AllowedBranchPrefixes);
         if (!branchValidator.IsValid(branch) && !_options.Force)
@@ -98,16 +114,6 @@ public class WorkflowRunner
                     return ExitCode.PushFailed;
                 }
                 _ui.Success("Existing commits pushed.");
-            }
-        }
-
-        if (_config.General.AutoStageFiles)
-        {
-            var stageResult = _git.StageAll();
-            if (!stageResult.Success)
-            {
-                _ui.Error($"git add failed: {stageResult.StdErr}");
-                return ExitCode.GitFailure;
             }
         }
 
