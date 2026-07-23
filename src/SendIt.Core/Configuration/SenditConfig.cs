@@ -62,7 +62,7 @@ public class GitSettings
     };
     public List<string> TicketPatterns { get; set; } = new()
     {
-        "HJI-\\d+", "ABC-\\d+", "JIRA-\\d+", "DEV-\\d+", "SDPR-\\d+"
+        "[A-Za-z][A-Za-z0-9]*-\\d+"
     };
     public int LargeCommitFileThreshold { get; set; } = 50;
     public int LargeCommitLineThreshold { get; set; } = 2000;

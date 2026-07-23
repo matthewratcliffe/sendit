@@ -594,29 +594,13 @@ Users may define unlimited regular expressions.
 
 
 
-Example
+Default (matches any PROJECT-123 style ticket key)
 
 
 
 ```
 
-HJI-\\d+
-
-
-
-ABC-\\d+
-
-
-
-JIRA-\\d+
-
-
-
-DEV-\\d+
-
-
-
-SDPR-\\d+
+[A-Za-z][A-Za-z0-9]*-\\d+
 
 ```
 
