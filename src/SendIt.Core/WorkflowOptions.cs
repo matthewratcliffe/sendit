@@ -1,3 +1,3 @@
 namespace SendIt.Core;
 
-public record WorkflowOptions(bool SkipTests, bool NoPr, bool Force);
+public record WorkflowOptions(bool SkipTests, bool Force);

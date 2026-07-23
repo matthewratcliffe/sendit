@@ -38,7 +38,7 @@ sendit
 
 
 
-which performs the entire developer workflow from validating the repository through to generating a Pull Request.
+which performs the entire developer workflow from validating the repository through to pushing the commit.
 
 
 
@@ -69,8 +69,6 @@ The application shall:
 \* Detect common mistakes before committing.
 
 \* Run project validation automatically.
-
-\* Generate Pull Request content.
 
 \* Provide repository-specific configuration.
 
@@ -133,12 +131,6 @@ The application shall:
 &#x20;         ▼
 
 &#x20;Push Service
-
-&#x20;         │
-
-&#x20;         ▼
-
-&#x20;PR Generator
 
 ```
 
@@ -249,26 +241,6 @@ sendit -skiptests
 
 
 Skips project validation.
-
-
-
-\---
-
-
-
-\## Skip PR Generation
-
-
-
-```
-
-sendit -nopr
-
-```
-
-
-
-Disables Pull Request generation.
 
 
 
@@ -454,8 +426,6 @@ The UI shall contain the following tabs.
 
 \* Tests
 
-\* Pull Requests
-
 \* Advanced
 
 
@@ -479,8 +449,6 @@ Configurable values include:
 \* Automatically stage files
 
 \* Automatically push
-
-\* Auto-open PR
 
 \* Colour theme
 
@@ -1190,95 +1158,7 @@ Cancel
 
 
 
-\# 24. Pull Request Generation
-
-
-
-Generate:
-
-
-
-Title
-
-
-
-Description
-
-
-
-Summary
-
-
-
-Testing
-
-
-
-Breaking Changes
-
-
-
-Review Notes
-
-
-
-Known Issues
-
-
-
-Output:
-
-
-
-Markdown
-
-
-
-JSON
-
-
-
-Clipboard
-
-
-
-Repository file
-
-
-
-\---
-
-
-
-\# 25. PR Publishing
-
-
-
-Supported:
-
-
-
-GitHub CLI
-
-
-
-GitLab CLI
-
-
-
-Azure DevOps (future)
-
-
-
-Bitbucket (future)
-
-
-
-\---
-
-
-
-\# 26. Diagnostics
+\# 24. Diagnostics
 
 
 
@@ -1346,7 +1226,7 @@ Displays pass/fail.
 
 
 
-\# 27. Logging
+\# 25. Logging
 
 
 
@@ -1386,7 +1266,7 @@ Log rotation supported.
 
 
 
-\# 28. Themes
+\# 26. Themes
 
 
 
@@ -1406,7 +1286,7 @@ Auto
 
 
 
-\# 29. Security
+\# 27. Security
 
 
 
@@ -1434,7 +1314,7 @@ Repository configs must not contain secrets.
 
 
 
-\# 30. Plugin Architecture
+\# 28. Plugin Architecture
 
 
 
@@ -1474,7 +1354,7 @@ No core changes required.
 
 
 
-\# 31. Extensibility
+\# 29. Extensibility
 
 
 
@@ -1530,7 +1410,7 @@ sendit explain
 
 
 
-\# 32. Exit Codes
+\# 30. Exit Codes
 
 
 
@@ -1568,7 +1448,7 @@ sendit explain
 
 
 
-8 PR failed
+8 Nothing to commit
 
 ```
 
@@ -1578,7 +1458,7 @@ sendit explain
 
 
 
-\# 33. Performance Requirements
+\# 31. Performance Requirements
 
 
 
@@ -1598,7 +1478,7 @@ sendit explain
 
 
 
-\# 34. Non-Functional Requirements
+\# 32. Non-Functional Requirements
 
 
 

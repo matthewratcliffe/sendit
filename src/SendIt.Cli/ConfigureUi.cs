@@ -5,7 +5,7 @@ using Terminal.Gui;
 namespace SendIt.Cli;
 
 /// <summary>Terminal.Gui based configuration screen (SPEC.md section 7): keyboard-navigable tabs
-/// for General, AI, Git, Tests, Pull Requests and Advanced settings.</summary>
+/// for General, AI, Git, Tests and Advanced settings.</summary>
 public static class ConfigureUi
 {
     public static void Run(ConfigManager manager, SenditConfig config)
@@ -25,7 +25,6 @@ public static class ConfigureUi
         tabView.AddTab(new TabView.Tab("AI", BuildAiTab(config)), false);
         tabView.AddTab(new TabView.Tab("Git", BuildGitTab(config)), false);
         tabView.AddTab(new TabView.Tab("Tests", BuildTestsTab(config)), false);
-        tabView.AddTab(new TabView.Tab("Pull Requests", BuildPullRequestsTab()), false);
         tabView.AddTab(new TabView.Tab("Advanced", BuildAdvancedTab(config)), false);
 
         win.Add(tabView);
@@ -55,8 +54,6 @@ public static class ConfigureUi
             v => config.General.AutoStageFiles = v);
         AddCheckbox(view, ref y, "Automatically push", config.General.AutoPush,
             v => config.General.AutoPush = v);
-        AddCheckbox(view, ref y, "Auto-open PR", config.General.AutoOpenPr,
-            v => config.General.AutoOpenPr = v);
         AddLabelAndField(view, ref y, "Colour theme (Dark/Light/Auto):", config.General.ColourTheme,
             v => config.General.ColourTheme = v);
         AddCheckbox(view, ref y, "Verbose logging", config.General.VerboseLogging,
@@ -179,13 +176,6 @@ public static class ConfigureUi
         stopCheck.Toggled += _ => config.Tests.StopOnFailure = stopCheck.Checked;
         view.Add(stopCheck);
 
-        return view;
-    }
-
-    private static View BuildPullRequestsTab()
-    {
-        var view = new View { X = 0, Y = 0, Width = Dim.Fill(), Height = Dim.Fill() };
-        view.Add(new Label(0, 1, "Pull Request generation is not yet implemented in this build.") { AutoSize = true });
         return view;
     }
 

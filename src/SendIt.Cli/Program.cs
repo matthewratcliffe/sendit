@@ -80,7 +80,6 @@ if (args.Contains("-doctor"))
 
 var options = new WorkflowOptions(
     SkipTests: args.Contains("-skiptests"),
-    NoPr: args.Contains("-nopr"),
     Force: args.Contains("-force"));
 
 var runner = new WorkflowRunner(git, config, new SpectreUserInteraction(), logger, options);
@@ -114,7 +113,6 @@ static void PrintHelp()
           sendit -doctor         Run diagnostics
           sendit -reset          Delete user configuration
           sendit -skiptests      Skip project validation
-          sendit -nopr           Disable Pull Request generation (default in this build)
           sendit -force          Override warnings
           sendit --version       Display version
           sendit --help          Display this help

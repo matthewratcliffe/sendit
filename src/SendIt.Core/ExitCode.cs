@@ -10,6 +10,5 @@ public enum ExitCode
     ConfigurationError = 5,
     UserCancelled = 6,
     PushFailed = 7,
-    PrFailed = 8,
-    NothingToCommit = 9
+    NothingToCommit = 8
 }

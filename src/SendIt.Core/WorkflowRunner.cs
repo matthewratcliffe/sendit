@@ -12,8 +12,7 @@ namespace SendIt.Core;
 /// <summary>
 /// Drives the end-to-end workflow described by SPEC.md sections 11-23: repository/branch
 /// validation, ticket detection, staging, test running, AI commit generation with manual
-/// fallback, commit review, commit, and push. PR generation/publishing is intentionally out
-/// of scope for this build (tracked separately) and is skipped regardless of -nopr.
+/// fallback, commit review, commit, and push.
 /// </summary>
 public class WorkflowRunner
 {

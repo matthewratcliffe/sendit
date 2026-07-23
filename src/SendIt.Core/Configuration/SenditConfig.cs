@@ -15,7 +15,6 @@ public class GeneralSettings
     public string DefaultTicketType { get; set; } = "";
     public bool AutoStageFiles { get; set; } = true;
     public bool AutoPush { get; set; } = false;
-    public bool AutoOpenPr { get; set; } = false;
     public string ColourTheme { get; set; } = "Auto";
     public bool VerboseLogging { get; set; } = false;
 }

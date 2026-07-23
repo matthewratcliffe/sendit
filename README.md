@@ -44,7 +44,6 @@ sendit -configure      Launch the Terminal.Gui configuration screen
 sendit -doctor         Run diagnostics
 sendit -reset          Delete user configuration
 sendit -skiptests      Skip project validation
-sendit -nopr           Disable Pull Request generation
 sendit -force          Override warnings
 sendit --version       Display version
 sendit --help          Display usage
@@ -79,11 +78,6 @@ Produces self-contained single-file binaries for win-x64, win-arm64, linux-x64,
 linux-arm64, osx-x64, and osx-arm64 under `./artifacts`, packaged as `.zip` (Windows)
 or `.tar.gz` (Linux/macOS) for GitHub Releases. Pushing a `v*` tag triggers
 `.github/workflows/release.yml` to do this automatically.
-
-## Out of scope in this build
-
-Pull Request generation/publishing (SPEC.md sections 24-25) is not implemented yet;
-`sendit` stops after push.
 
 ## Tests
 
