@@ -96,18 +96,38 @@ public static class ConfigureUi
         AddLabelAndField(view, ref y, "CLI arguments:", config.Ai.CommandArguments, v => config.Ai.CommandArguments = v);
 
         var testButton = new Button(20, y + 1, "Test Connection");
+        var testStatusLabel = new Label(20, y + 2, "") { AutoSize = true };
+        view.Add(testStatusLabel);
+
         testButton.Clicked += () =>
         {
-            try
+            testButton.Enabled = false;
+            testStatusLabel.Text = "Test in progress, please wait..";
+            view.SetNeedsDisplay();
+
+            var provider = AiProviderFactory.Create(config.Ai);
+            Task.Run(async () =>
             {
-                var provider = AiProviderFactory.Create(config.Ai);
-                var ok = provider.TestConnectionAsync().GetAwaiter().GetResult();
-                MessageBox.Query("Test Connection", ok ? $"{provider.Name}: connected." : $"{provider.Name}: not reachable.", "OK");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.ErrorQuery("Test Connection", ex.Message, "OK");
-            }
+                try
+                {
+                    var ok = await provider.TestConnectionAsync();
+                    Application.MainLoop.Invoke(() =>
+                    {
+                        testStatusLabel.Text = "";
+                        testButton.Enabled = true;
+                        MessageBox.Query("Test Connection", ok ? $"{provider.Name}: connected." : $"{provider.Name}: not reachable.", "OK");
+                    });
+                }
+                catch (Exception ex)
+                {
+                    Application.MainLoop.Invoke(() =>
+                    {
+                        testStatusLabel.Text = "";
+                        testButton.Enabled = true;
+                        MessageBox.ErrorQuery("Test Connection", ex.Message, "OK");
+                    });
+                }
+            });
         };
         view.Add(testButton);
 
