@@ -1,9 +1,10 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - "v*"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -15,16 +16,31 @@ jobs:
         with:
           dotnet-version: "8.0.x"
 
+      - name: Compute version
+        id: version
+        shell: pwsh
+        run: |
+          $version = "1.0.$env:GITHUB_RUN_NUMBER"
+          "version=$version" >> $env:GITHUB_OUTPUT
+          "tag=v$version" >> $env:GITHUB_OUTPUT
+
       - name: Test
         run: dotnet test
 
       - name: Publish all platforms
         shell: pwsh
-        run: ./packaging/publish.ps1
+        run: ./packaging/publish.ps1 -Version "${{ steps.version.outputs.version }}"
+
+      - name: Tag release
+        shell: pwsh
+        run: |
+          git tag ${{ steps.version.outputs.tag }}
+          git push origin ${{ steps.version.outputs.tag }}
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ steps.version.outputs.tag }}
           files: artifacts/*.zip,artifacts/*.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

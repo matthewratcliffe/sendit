@@ -1,3 +1,4 @@
+using System.Reflection;
 using SendIt.Cli;
 using SendIt.Core;
 using SendIt.Core.Configuration;
@@ -7,7 +8,9 @@ using SendIt.Core.Logging;
 using Serilog;
 using Spectre.Console;
 
-const string Version = "1.0.0";
+string Version = Assembly.GetExecutingAssembly()
+    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion
+    ?? "1.0.0";
 
 if (args.Contains("--version"))
 {

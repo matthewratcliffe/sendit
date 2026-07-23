@@ -2,7 +2,13 @@
 .SYNOPSIS
     Builds self-contained single-file sendit binaries for all supported platforms and
     zips/tars them into ./artifacts, ready to attach to a GitHub Release.
+.PARAMETER Version
+    Version number to stamp into the binaries (e.g. 1.0.42). Defaults to the csproj's version.
 #>
+param(
+    [string]$Version
+)
+
 $ErrorActionPreference = 'Stop'
 $root = Split-Path -Parent $PSScriptRoot
 $project = Join-Path $root 'src\SendIt.Cli\SendIt.Cli.csproj'
@@ -12,12 +18,13 @@ Remove-Item $artifacts -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Path $artifacts | Out-Null
 
 $rids = @('win-x64', 'win-arm64', 'linux-x64', 'linux-arm64', 'osx-x64', 'osx-arm64')
+$versionArgs = if ($Version) { @("-p:Version=$Version") } else { @() }
 
 foreach ($rid in $rids) {
     Write-Host "Publishing $rid..." -ForegroundColor Cyan
     $out = Join-Path $artifacts $rid
     dotnet publish $project -c Release -r $rid -o $out `
-        -p:PublishSingleFile=true -p:SelfContained=true --self-contained true
+        -p:PublishSingleFile=true -p:SelfContained=true --self-contained true @versionArgs
 
     if ($rid.StartsWith('win-')) {
         Compress-Archive -Path (Join-Path $out 'sendit.exe') -DestinationPath (Join-Path $artifacts "sendit-$rid.zip") -Force
