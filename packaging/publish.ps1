@@ -18,7 +18,8 @@ Remove-Item $artifacts -Recurse -Force -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Path $artifacts | Out-Null
 
 $rids = @('win-x64', 'win-arm64', 'linux-x64', 'linux-arm64', 'osx-x64', 'osx-arm64')
-$versionArgs = if ($Version) { @("-p:Version=$Version") } else { @() }
+[string[]]$versionArgs = @()
+if ($Version) { $versionArgs = @("-p:Version=$Version") }
 
 foreach ($rid in $rids) {
     Write-Host "Publishing $rid..." -ForegroundColor Cyan
