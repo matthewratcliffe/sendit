@@ -53,6 +53,7 @@ public class CliShellProvider : IAiProvider
         {
             var psi = new ProcessStartInfo(_settings.CommandExecutable, "--version")
             {
+                RedirectStandardInput = true,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -60,12 +61,38 @@ public class CliShellProvider : IAiProvider
             };
             using var process = Process.Start(psi);
             if (process is null) return false;
-            await process.WaitForExitAsync(cancellationToken);
+            process.StandardInput.Close();
+
+            using var timeoutCts = new CancellationTokenSource(TimeSpan.FromSeconds(Math.Max(1, _settings.TimeoutSeconds)));
+            using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeoutCts.Token);
+
+            try
+            {
+                await process.WaitForExitAsync(linkedCts.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                TryKill(process);
+                return false;
+            }
+
             return process.ExitCode == 0;
         }
         catch
         {
             return false;
+        }
+    }
+
+    private static void TryKill(Process process)
+    {
+        try
+        {
+            if (!process.HasExited) process.Kill(entireProcessTree: true);
+        }
+        catch
+        {
+            // Best-effort; the process may have already exited.
         }
     }
 
@@ -92,7 +119,16 @@ public class CliShellProvider : IAiProvider
         var stdOutTask = process.StandardOutput.ReadToEndAsync(linkedCts.Token);
         var stdErrTask = process.StandardError.ReadToEndAsync(linkedCts.Token);
 
-        await process.WaitForExitAsync(linkedCts.Token);
+        try
+        {
+            await process.WaitForExitAsync(linkedCts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            TryKill(process);
+            throw;
+        }
+
         var stdOut = await stdOutTask;
         var stdErr = await stdErrTask;
 
