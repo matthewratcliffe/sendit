@@ -39,6 +39,13 @@ if (!GitService.TryLocateGit(out _))
     return (int)ExitCode.GitFailure;
 }
 
+var availableUpdate = await new UpdateChecker().GetAvailableUpdateAsync(Version, CancellationToken.None);
+if (availableUpdate is not null)
+{
+    AnsiConsole.MarkupLineInterpolated(
+        $"[yellow]An update is available: {Version} -> {availableUpdate}. Run the install script again to update.[/]");
+}
+
 var git = new GitService(repoRoot);
 var configManager = new ConfigManager(repoRoot);
 SenditConfig config;
