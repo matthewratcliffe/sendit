@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SendIt.Cli/SendIt.Cli.csproj" />
+    <Project Path="src/SendIt.Core/SendIt.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/SendIt.Core.Tests/SendIt.Core.Tests.csproj" />
+  </Folder>
+</Solution>
