@@ -265,7 +265,7 @@ public class WorkflowRunner
 
     private CommitReviewChoice ReviewMenu(string candidate)
     {
-        _ui.Info($"Proposed commit message:\n{candidate}");
+        _ui.Info($"📝 Proposed commit message: {candidate}");
         var choice = _ui.Choose("What would you like to do?", "Accept", "Edit");
         if (choice == ThreeWayChoice.Primary) return CommitReviewChoice.Accept;
         if (choice == ThreeWayChoice.Secondary) return CommitReviewChoice.Edit;

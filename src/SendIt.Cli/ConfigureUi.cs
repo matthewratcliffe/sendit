@@ -13,7 +13,7 @@ public static class ConfigureUi
         Application.Init();
         var top = Application.Top;
 
-        var win = new Window("SendIt Configuration (Ctrl+S save, Esc quit)")
+        var win = new Window("SendIt Configuration (F2 save, F3 save repo, Esc quit)")
         {
             X = 0, Y = 0, Width = Dim.Fill(), Height = Dim.Fill()
         };
@@ -26,13 +26,34 @@ public static class ConfigureUi
         tabView.AddTab(new TabView.Tab("Git", BuildGitTab(config)), false);
         tabView.AddTab(new TabView.Tab("Tests", BuildTestsTab(config)), false);
         tabView.AddTab(new TabView.Tab("Advanced", BuildAdvancedTab(config)), false);
+        tabView.AddTab(new TabView.Tab("About", BuildAboutTab()), false);
 
         win.Add(tabView);
 
-        var statusBar = new StatusBar(new StatusItem[]
+        StatusBar? statusBar = null;
+        void ShowSaved(string message)
         {
-            new(Key.CtrlMask | Key.S, "~^S~ Save (user)", () => { manager.SaveUser(config); MessageBox.Query("SendIt", "Saved to user profile.", "OK"); }),
-            new(Key.CtrlMask | Key.R, "~^R~ Save (repo)", () => { manager.SaveRepo(config); MessageBox.Query("SendIt", "Saved to repository (no secrets).", "OK"); }),
+            if (statusBar is null) return;
+            var original = statusBar.Items;
+            statusBar.Items = new StatusItem[] { new(Key.Null, $"✔ {message}", () => { }) }
+                .Concat(original.Skip(1)).ToArray();
+            statusBar.SetNeedsDisplay();
+            Application.MainLoop.AddTimeout(TimeSpan.FromSeconds(2), _ =>
+            {
+                statusBar.Items = original;
+                statusBar.SetNeedsDisplay();
+                return false;
+            });
+        }
+
+        // Ctrl+S is intercepted by the Windows console host as a "pause output" hotkey and
+        // never reaches the app, so F-keys are used as the primary save shortcuts instead.
+        statusBar = new StatusBar(new StatusItem[]
+        {
+            new(Key.F2, "~F2~ Save (user)", () => { manager.SaveUser(config); ShowSaved("Saved to user profile"); }),
+            new(Key.F3, "~F3~ Save (repo)", () => { manager.SaveRepo(config); ShowSaved("Saved to repository"); }),
+            new(Key.CtrlMask | Key.S, "~^S~ Save (user)", () => { manager.SaveUser(config); ShowSaved("Saved to user profile"); }),
+            new(Key.CtrlMask | Key.R, "~^R~ Save (repo)", () => { manager.SaveRepo(config); ShowSaved("Saved to repository"); }),
             new(Key.Esc, "~Esc~ Quit", () => Application.RequestStop()),
         });
         top.Add(statusBar);
@@ -189,6 +210,35 @@ public static class ConfigureUi
             v => config.Advanced.LogRetainedFileCount = int.TryParse(v, out var i) ? i : config.Advanced.LogRetainedFileCount);
         AddCheckbox(view, ref y, "Require ticket", config.Advanced.RequireTicket, v => config.Advanced.RequireTicket = v);
         return view;
+    }
+
+    private static View BuildAboutTab()
+    {
+        var view = new View { X = 0, Y = 0, Width = Dim.Fill(), Height = Dim.Fill() };
+        view.Add(new Label(0, 1, "SendIt"));
+        view.Add(new Label(0, 3, "Released under the MIT Licence."));
+
+        var repoLink = new Button(0, 5, "GitHub: github.com/matthewratcliffe/sendit") { X = 0 };
+        repoLink.Clicked += () => OpenUrl("https://github.com/matthewratcliffe/sendit");
+        view.Add(repoLink);
+
+        var siteLink = new Button(0, 7, "www.matthewratcliffe.com.au") { X = 0 };
+        siteLink.Clicked += () => OpenUrl("https://www.matthewratcliffe.com.au");
+        view.Add(siteLink);
+
+        return view;
+    }
+
+    private static void OpenUrl(string url)
+    {
+        try
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(url) { UseShellExecute = true });
+        }
+        catch (Exception ex)
+        {
+            MessageBox.ErrorQuery("SendIt", $"Could not open link: {ex.Message}", "OK");
+        }
     }
 
     private static void AddLabelAndField(View view, ref int y, string label, string value, Action<string> onChange, bool secret = false)

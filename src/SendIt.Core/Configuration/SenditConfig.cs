@@ -14,7 +14,7 @@ public class GeneralSettings
     public string DefaultBranchPrefix { get; set; } = "feature/";
     public string DefaultTicketType { get; set; } = "";
     public bool AutoStageFiles { get; set; } = true;
-    public bool AutoPush { get; set; } = false;
+    public bool AutoPush { get; set; } = true;
     public string ColourTheme { get; set; } = "Auto";
     public bool VerboseLogging { get; set; } = false;
 }

@@ -1,5 +1,8 @@
 # SendIt
 
+Ever wanted to just type `sendit` to `git add && git commit && git push`? Well now you
+can, one easy command to enforce branch prefixes, ticket references and more.
+
 AI-assisted Git workflow automation: standardises commits, enforces branch/ticket
 conventions, runs your tests, and commits/pushes — all from a single `sendit` command.
 See [SPEC.md](SPEC.md) for the full functional specification.
