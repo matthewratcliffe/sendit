@@ -226,6 +226,7 @@ public class WorkflowRunner
             if (provider is not null)
             {
                 var generator = new CommitMessageGenerator(provider, _config.Ai);
+                _ui.Info("Thinking about a commit message ....");
                 var result = await generator.GenerateAsync(context, cancellationToken);
                 if (result.Success)
                 {
