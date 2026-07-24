@@ -10,7 +10,11 @@
       "Bash(git push *)",
       "Bash(git fetch *)",
       "Bash(git merge *)",
-      "Bash(dotnet build *)"
+      "Bash(dotnet build *)",
+      "Bash(git -C /d/Repos/sendit ls-files)",
+      "Bash(grep -iE '\\\\.\\(js|ts|py|sh|go|rb\\)$')",
+      "Bash(xargs grep -liE 'push')",
+      "Bash(sed 's/.*\\\\.//')"
     ]
   }
 }

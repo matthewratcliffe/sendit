@@ -121,9 +121,5 @@ public class GitService
         return result.Success && result.StdOut.Length > 0;
     }
 
-    public GitResult Push()
-    {
-        var upstream = GetUpstreamBranch();
-        return upstream is null ? Run($"push -u origin {GetCurrentBranch()}") : Run("push");
-    }
+    public GitResult Push() => Run($"push -u origin {GetCurrentBranch()}");
 }
